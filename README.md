@@ -17,16 +17,10 @@ You can install the package via composer:
 composer require schmeits/filament-pan-analytics-widget
 ```
 
-Optionally, you can publish the views
-
+Optionally, you can publish the translations
 ```bash
-php artisan vendor:publish --tag="filament-umami-widgets-views"
+php artisan vendor:publish --tag="filament-pan-analytics-widget-translations"
 ```
-or translations
-```bash
-php artisan vendor:publish --tag="filament-umami-widgets-translations"
-```
-
 
 ## Usage
 
