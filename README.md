@@ -11,6 +11,8 @@ A Filament Widget for the [PanPHP plugin](https://github.com/panphp/pan) provide
 
 ## Installation
 
+> **Requires [PHP 8.3+](https://php.net/releases/), and [Laravel 11.0+](https://laravel.com)**.
+
 You can install the package via composer:
 
 ```bash
