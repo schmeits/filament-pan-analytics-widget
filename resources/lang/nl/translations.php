@@ -3,6 +3,7 @@
 return [
     'widget' => [
         'global' => [
+            'empty' => 'Er is nog geen data beschikbaar',
             'limit' => 'top :count resultaten',
             'limit_show_all' => 'alle resultaten',
         ],

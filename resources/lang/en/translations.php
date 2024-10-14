@@ -3,6 +3,7 @@
 return [
     'widget' => [
         'global' => [
+            'empty' => 'No analytics available',
             'limit' => 'top :count results',
             'limit_show_all' => 'all results',
         ],
