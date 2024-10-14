@@ -7,6 +7,8 @@
 
 A Filament Widget for the [PanPHP plugin](https://github.com/panphp/pan) provides a user-friendly interface to monitor and interact with PAN instances directly from your Filament admin dashboard.
 
+![example-screenshot.png](https://github.com/schmeits/filament-pan-analytics-widget/raw/main/docs-assets/screenshots/pan-analytics-widget.png)
+
 ## Installation
 
 You can install the package via composer:
