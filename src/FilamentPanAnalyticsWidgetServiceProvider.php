@@ -4,6 +4,7 @@ namespace Schmeits\FilamentPanAnalyticsWidget;
 
 use Illuminate\Filesystem\Filesystem;
 use Livewire\Features\SupportTesting\Testable;
+use Livewire\Livewire;
 use Schmeits\FilamentPanAnalyticsWidget\Testing\TestsFilamentPanAnalyticsWidget;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
 use Spatie\LaravelPackageTools\Package;
@@ -47,7 +48,8 @@ class FilamentPanAnalyticsWidgetServiceProvider extends PackageServiceProvider
             }
         }
 
-        WidgetManager::make()->boot();
+        // register livewire component
+        Livewire::component('filament-pan-analytics-widget', Widgets\PanAnalyticsTableWidget::class);
 
         // Testing
         Testable::mixin(new TestsFilamentPanAnalyticsWidget);

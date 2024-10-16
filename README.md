@@ -36,8 +36,7 @@ php artisan vendor:publish --tag="filament-pan-analytics-widget-translations"
 ```php
 ->plugins([
     \Schmeits\FilamentPanAnalyticsWidget\FilamentPanAnalyticsWidgetPlugin::make()
-        ->pollingInterval('10s') // polling interval for the widget
-        ->persistFiltersInSession(), // if you would like to persist the limit filter in the session
+        ->searchable() // display a search for the name column       
 ])
 ```
 
@@ -69,6 +68,7 @@ Please review [our security policy](../../security/policy) on how to report secu
 ## Credits
 
 - [Tally Schmeits](https://github.com/schmeits)
+- [Punyapal Shah](https://github.com/MrPunyapal) for his contribution to Pinkary where I got some inspiration for a refactor
 - [All Contributors](../../contributors)
 
 ## License

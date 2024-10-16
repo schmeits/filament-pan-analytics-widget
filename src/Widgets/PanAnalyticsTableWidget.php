@@ -2,136 +2,79 @@
 
 namespace Schmeits\FilamentPanAnalyticsWidget\Widgets;
 
-use Filament\Widgets\Concerns\InteractsWithPageFilters;
-use Filament\Widgets\Widget;
-use Illuminate\Contracts\Support\Htmlable;
-use Pan\Adapters\Laravel\Repositories\DatabaseAnalyticsRepository;
-use Pan\Presentors\AnalyticPresentor;
+use Filament\Tables;
+use Filament\Tables\Table;
+use Filament\Widgets\TableWidget as BaseWidget;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Number;
 use Schmeits\FilamentPanAnalyticsWidget\FilamentPanAnalyticsWidgetPlugin;
 
-class PanAnalyticsTableWidget extends Widget
+class PanAnalyticsTableWidget extends BaseWidget
 {
-    use InteractsWithPageFilters;
-
     protected int | string | array $columnSpan = 'full';
 
     protected static ?int $sort = -9;
 
-    protected ?string $heading = '';
-
-    protected string $id = 'pan-analytics-table';
-
-    protected bool $limitResults = true;
-
-    public ?int $limit = null;
-
-    protected static string $view = 'filament-pan-analytics-widget::table-widget';
-
-    public ?string $option = null;
-
-    public function updatedLimit(): void
+    public static function getHeading(): ?string
     {
-        if ($this->getPersistFiltersInSession()) {
-            session()->put($this->id . '-limit', $this->limit);
-        }
+        return trans('filament-pan-analytics-widget::translations.heading');
     }
 
-    public function mount(): void
+    public function table(Table $table): Table
     {
-        $this->heading = trans("filament-pan-analytics-widget::translations.widget.$this->id.heading");
-        $this->option = collect($this->getOptions())->keys()->first();
+        $panAnalytics = new class extends Model
+        {
+            protected $table = 'pan_analytics';
+        };
 
-        if ($this->limitResults) {
-            if ($this->limit === null &&
-                $this->getPersistFiltersInSession() &&
-                session()->has($this->id . '-limit')
-            ) {
-                $this->limit = session()->get($this->id . '-limit');
-            } else {
-                $this->limit = 5;
-            }
-        }
+        return $table
+            ->query(
+                $panAnalytics::query()->orderBy('impressions', 'desc')
+            )
+            ->columns([
+                Tables\Columns\TextColumn::make('name')
+                    ->label(__('filament-pan-analytics-widget::translations.headers.name'))
+                    ->sortable()
+                    ->searchable($this->getIsSearchable())
+                    ->grow(),
+                Tables\Columns\TextColumn::make('impressions')
+                    ->alignCenter()
+                    ->sortable()
+                    ->formatStateUsing(fn ($record) => $this->toHumanReadableNumber($record->impressions))
+                    ->label(__('filament-pan-analytics-widget::translations.headers.impressions')),
+                Tables\Columns\TextColumn::make('hovers')
+                    ->alignCenter()
+                    ->sortable()
+                    ->formatStateUsing(fn ($record) => $this->toHumanReadableNumber($record->hovers) . ' (' . $this->toHumanReadablePercentage($record->impressions, $record->hovers) . ')')
+                    ->label(__('filament-pan-analytics-widget::translations.headers.hovers')),
+                Tables\Columns\TextColumn::make('clicks')
+                    ->alignCenter()
+                    ->sortable()
+                    ->formatStateUsing(fn ($record) => $this->toHumanReadableNumber($record->clicks) . ' (' . $this->toHumanReadablePercentage($record->impressions, $record->clicks) . ')')
+                    ->label(__('filament-pan-analytics-widget::translations.headers.clicks')),
+            ])
+            ->paginated()
+            ->paginationPageOptions(['5', '10', '20', '50', 'all'])
+            ->defaultSort('impressions')
+            ->persistFiltersInSession();
     }
 
-    public function getPollingInterval(): ?string
+    private function getIsSearchable(): bool
     {
-        return FilamentPanAnalyticsWidgetPlugin::get()->getPollingInterval();
+        return FilamentPanAnalyticsWidgetPlugin::get()->getSearchable();
     }
 
-    public function getPersistFiltersInSession(): bool
+    private function toHumanReadableNumber(int $number): string
     {
-        return FilamentPanAnalyticsWidgetPlugin::get()->getPersistFiltersInSession();
+        return Number::format($number);
     }
 
-    public function getTableHeading(): string | Htmlable | null
+    private function toHumanReadablePercentage(int $total, int $part): string
     {
-        return $this->heading;
-    }
-
-    public function getHeaders(): array
-    {
-        return [
-            [
-                'name' => 'id',
-                'label' => trans("filament-pan-analytics-widget::translations.widget.$this->id.headers.id"),
-                'width' => '5%',
-            ],
-            [
-                'name' => 'name',
-                'label' => trans("filament-pan-analytics-widget::translations.widget.$this->id.headers.name"),
-                'width' => '65%',
-            ],
-            [
-                'name' => 'impressions',
-                'label' => trans("filament-pan-analytics-widget::translations.widget.$this->id.headers.impressions"),
-                'width' => '10%',
-            ],
-            [
-                'name' => 'hovers',
-                'label' => trans("filament-pan-analytics-widget::translations.widget.$this->id.headers.hovers"),
-                'width' => '10%',
-            ],
-            [
-                'name' => 'clicks',
-                'label' => trans("filament-pan-analytics-widget::translations.widget.$this->id.headers.clicks"),
-                'width' => '10%',
-            ],
-        ];
-    }
-
-    public function getOptions(): array
-    {
-        return [];
-    }
-
-    public function hasLimitedResults(): bool
-    {
-        return $this->limitResults;
-    }
-
-    public function getData(): array
-    {
-        $analytic = new DatabaseAnalyticsRepository;
-        $presenter = new AnalyticPresentor;
-
-        $data = collect($analytic->all())->map(fn ($item) => $presenter->present($item));
-
-        if ($this->limitResults) {
-            $data->take($this->limit);
+        if ($total === 0) {
+            return 'Infinity%';
         }
 
-        return $data->toArray();
-    }
-
-    public function getLimit(): int
-    {
-        return $this->limit;
-    }
-
-    public function setLimit(int $limit): self
-    {
-        $this->limit = $limit;
-
-        return $this;
+        return Number::percentage($part / $total * 100, 0, 1);
     }
 }

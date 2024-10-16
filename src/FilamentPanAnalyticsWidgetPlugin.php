@@ -11,9 +11,19 @@ class FilamentPanAnalyticsWidgetPlugin implements Plugin
 {
     use EvaluatesClosures;
 
-    protected string | Closure | null $pollingInterval = null;
+    protected bool $searchable = false;
 
-    protected bool $persistsFiltersInSession = false;
+    public function getSearchable(): bool
+    {
+        return $this->evaluate($this->searchable);
+    }
+
+    public function searchable(bool | Closure | null $searchable = true): static
+    {
+        $this->searchable = $searchable;
+
+        return $this;
+    }
 
     public function getId(): string
     {
@@ -41,29 +51,5 @@ class FilamentPanAnalyticsWidgetPlugin implements Plugin
         $plugin = filament(app(static::class)->getId());
 
         return $plugin;
-    }
-
-    public function getPollingInterval(): string
-    {
-        return $this->evaluate($this->pollingInterval) ?? '60s';
-    }
-
-    public function pollingInterval(string | Closure | null $interval = '60s'): static
-    {
-        $this->pollingInterval = $interval;
-
-        return $this;
-    }
-
-    public function getPersistFiltersInSession(): bool
-    {
-        return $this->evaluate($this->persistsFiltersInSession);
-    }
-
-    public function persistFiltersInSession(bool | Closure | null $shouldPersist = true): static
-    {
-        $this->persistsFiltersInSession = $shouldPersist;
-
-        return $this;
     }
 }
