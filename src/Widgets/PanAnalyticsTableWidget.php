@@ -5,7 +5,6 @@ namespace Schmeits\FilamentPanAnalyticsWidget\Widgets;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Number;
 use Schmeits\FilamentPanAnalyticsWidget\FilamentPanAnalyticsWidgetPlugin;
 use Schmeits\FilamentPanAnalyticsWidget\Models\PanAnalytics;
