@@ -2,6 +2,10 @@
 
 All notable changes to `filament-pan-analytics-widget` will be documented in this file.
 
+## 0.4 - 2024-10-18
+
+Used a proper Laravel model
+
 ## 0.3 - 2024-10-16
 
 Changed: huge refactor of internals, now uses Filament tables
