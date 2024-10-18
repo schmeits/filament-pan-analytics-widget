@@ -8,6 +8,7 @@ use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Number;
 use Schmeits\FilamentPanAnalyticsWidget\FilamentPanAnalyticsWidgetPlugin;
+use Schmeits\FilamentPanAnalyticsWidget\Models\PanAnalytics;
 
 class PanAnalyticsTableWidget extends BaseWidget
 {
@@ -22,14 +23,9 @@ class PanAnalyticsTableWidget extends BaseWidget
 
     public function table(Table $table): Table
     {
-        $panAnalytics = new class extends Model
-        {
-            protected $table = 'pan_analytics';
-        };
-
         return $table
             ->query(
-                $panAnalytics::query()->orderBy('impressions', 'desc')
+                PanAnalytics::query()
             )
             ->columns([
                 Tables\Columns\TextColumn::make('name')
@@ -55,7 +51,7 @@ class PanAnalyticsTableWidget extends BaseWidget
             ])
             ->paginated()
             ->paginationPageOptions(['5', '10', '20', '50', 'all'])
-            ->defaultSort('impressions')
+            ->defaultSort('impressions', 'desc')
             ->persistFiltersInSession();
     }
 
