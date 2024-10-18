@@ -2,7 +2,6 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/schmeits/filament-pan-analytics-widget.svg?style=flat-square)](https://packagist.org/packages/schmeits/filament-pan-analytics-widget)
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/schmeits/filament-pan-analytics-widget/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/schmeits/filament-pan-analytics-widget/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/schmeits/filament-pan-analytics-widget/fix-php-code-styling.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/schmeits/filament-pan-analytics-widget/actions?query=workflow%3A"Fix+PHP+code+styling"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/schmeits/filament-pan-analytics-widget.svg?style=flat-square)](https://packagist.org/packages/schmeits/filament-pan-analytics-widget)
 
 A Filament Widget for the [PanPHP plugin](https://github.com/panphp/pan) provides a user-friendly interface to monitor and interact with PAN instances directly from your Filament admin dashboard.
