@@ -11,11 +11,20 @@ class FilamentPanAnalyticsWidgetPlugin implements Plugin
 {
     use EvaluatesClosures;
 
-    protected bool $searchable = false;
+    /**
+     * The setter promises bool|Closure|null, and the class relies on
+     * EvaluatesClosures precisely so a closure can be evaluated lazily. The
+     * property type must therefore allow the same, otherwise every closure call
+     * would throw a TypeError.
+     */
+    protected bool | Closure | null $searchable = false;
 
     public function getSearchable(): bool
     {
-        return $this->evaluate($this->searchable);
+        // evaluate() can return null when searchable was never set (or set to
+        // null). The cast keeps the public bool contract intact: not configured
+        // means not searchable.
+        return (bool) $this->evaluate($this->searchable);
     }
 
     public function searchable(bool | Closure | null $searchable = true): static
