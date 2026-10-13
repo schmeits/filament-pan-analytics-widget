@@ -2,6 +2,32 @@
 
 All notable changes to `filament-pan-analytics-widget` will be documented in this file.
 
+## 5.0.0 - unreleased
+
+For Filament 4 and 5. Filament 3 stays on 4.x (branch `4.x`).
+
+### Breaking
+
+- Requires Filament 4 or 5, tested on Laravel 12 and 13 with PHP 8.3 to 8.5.
+- `FilamentPanAnalyticsWidgetPlugin::getSearchable()` is renamed to `isSearchable()`.
+- Page size options are 5, 10, 25 and 50; the "all" option is removed.
+- Removed the unused facade, `FilamentPanAnalyticsWidget` class, testing mixin, stubs, view namespace and the install command.
+- Translation key `headers.id` removed; `not_available`, `empty.heading` and `empty.description` added.
+
+### Added
+
+- `->authorize(bool|Closure)` on the plugin to decide who may see the widget.
+- `FilamentPanAnalyticsWidgetPlugin::current()`, which returns null on a panel without the plugin.
+- An empty state that explains where the data comes from.
+
+### Changed
+
+- Number columns are right-aligned.
+- Strict types everywhere, PHPStan (Larastan 3) on level max for source and tests, architecture tests.
+- No more JavaScript build tooling: the package ships no assets.
+
+Also includes every fix from 4.1.0.
+
 ## 4.1.0 - unreleased
 
 For Filament 3. The Filament 4/5 version continues as 5.x.

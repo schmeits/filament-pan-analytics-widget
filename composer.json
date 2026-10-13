@@ -1,10 +1,14 @@
 {
     "name": "schmeits/filament-pan-analytics-widget",
-    "description": "A widget for pan (lightweight and privacy-focused PHP product analytics library)",
+    "description": "A Filament widget that shows the product analytics collected by panphp/pan",
     "keywords": [
         "schmeits",
         "laravel",
-        "filament-pan-analytics-widget"
+        "filament",
+        "filament-plugin",
+        "pan",
+        "analytics",
+        "widget"
     ],
     "homepage": "https://github.com/schmeits/filament-pan-analytics-widget",
     "support": {
@@ -21,27 +25,27 @@
     ],
     "require": {
         "php": "^8.3",
-        "filament/filament": "^3.2",
+        "filament/filament": "^4.0|^5.0",
         "panphp/pan": "^0.1.0",
         "spatie/laravel-package-tools": "^1.15.0"
     },
     "require-dev": {
+        "larastan/larastan": "^3.0",
         "laravel/pint": "^1.0",
-        "nunomaduro/collision": "^v8.4.0",
-        "nunomaduro/larastan": "^2.0.1",
-        "orchestra/testbench": "^v9.0",
-        "pestphp/pest": "^3.0",
-        "pestphp/pest-plugin-arch": "^3.0",
-        "pestphp/pest-plugin-laravel": "^3.0",
-        "phpstan/extension-installer": "^1.1",
-        "phpstan/phpstan-deprecation-rules": "^1.0",
-        "phpstan/phpstan-phpunit": "^1.0",
-        "spatie/laravel-ray": "^1.26"
+        "orchestra/testbench": "^10.0|^11.0",
+        "pestphp/pest": "^3.0|^4.0",
+        "pestphp/pest-plugin-arch": "^3.0|^4.0",
+        "pestphp/pest-plugin-laravel": "^3.0|^4.0",
+        "phpstan/extension-installer": "^1.4",
+        "phpstan/phpstan-deprecation-rules": "^2.0",
+        "phpstan/phpstan-phpunit": "^2.0"
+    },
+    "suggest": {
+        "ext-intl": "Formats the numbers and percentages in the app locale"
     },
     "autoload": {
         "psr-4": {
-            "Schmeits\\FilamentPanAnalyticsWidget\\": "src/",
-            "Schmeits\\FilamentPanAnalyticsWidget\\Database\\Factories\\": "database/factories/"
+            "Schmeits\\FilamentPanAnalyticsWidget\\": "src/"
         }
     },
     "autoload-dev": {
@@ -67,12 +71,8 @@
         "laravel": {
             "providers": [
                 "Schmeits\\FilamentPanAnalyticsWidget\\FilamentPanAnalyticsWidgetServiceProvider"
-            ],
-            "aliases": {
-                "FilamentPanAnalyticsWidget": "Schmeits\\FilamentPanAnalyticsWidget\\Facades\\FilamentPanAnalyticsWidget"
-            }
+            ]
         }
     },
-    "minimum-stability": "dev",
     "prefer-stable": true
 }

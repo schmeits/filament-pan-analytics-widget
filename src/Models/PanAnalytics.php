@@ -1,5 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * src/Models/PanAnalytics.php
+ *
+ * Read-only model on the pan_analytics table of panphp/pan.
+ */
+
 namespace Schmeits\FilamentPanAnalyticsWidget\Models;
 
 use Illuminate\Database\Eloquent\Model;
