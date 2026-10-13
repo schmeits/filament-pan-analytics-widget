@@ -1,5 +1,8 @@
 <?php
 
+use Filament\Facades\Filament;
+use Filament\Panel;
+use Filament\Tables\Columns\TextColumn;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Number;
 use Livewire\Livewire;
@@ -93,7 +96,7 @@ it('does not divide by zero when an element has zero impressions', function () {
         ->assertSuccessful()
         ->assertTableColumnFormattedStateSet(
             'hovers',
-            Number::format(0) . ' (Infinity%)',
+            Number::format(0) . ' (-)',
             PanAnalytics::first(),
         );
 });
@@ -112,4 +115,68 @@ it('renders the name column without a search bar when the plugin is not searchab
     Livewire::test(PanAnalyticsTableWidget::class)
         ->assertSuccessful()
         ->assertTableColumnExists('name');
+});
+
+it('shows a search field on the name column when the plugin is searchable', function () {
+    Filament::getPanel('test-admin')
+        ->getPlugin('filament-pan-analytics-widget')
+        ->searchable();
+
+    DB::table('pan_analytics')->insert([
+        ['name' => 'checkout-button', 'impressions' => 10, 'hovers' => 0, 'clicks' => 0],
+        ['name' => 'newsletter-form', 'impressions' => 5, 'hovers' => 0, 'clicks' => 0],
+    ]);
+
+    Livewire::test(PanAnalyticsTableWidget::class)
+        ->assertTableColumnExists('name', fn (TextColumn $column): bool => $column->isGloballySearchable())
+        ->searchTable('newsletter')
+        ->assertCanSeeTableRecords(PanAnalytics::where('name', 'newsletter-form')->get())
+        ->assertCanNotSeeTableRecords(PanAnalytics::where('name', 'checkout-button')->get());
+});
+
+it('does not make the name column searchable by default', function () {
+    Livewire::test(PanAnalyticsTableWidget::class)
+        ->assertTableColumnExists('name', fn (TextColumn $column): bool => ! $column->isGloballySearchable());
+});
+
+it('still renders on a panel that does not have the plugin', function () {
+    // Users can put the widget on a panel and forget the plugin. That used to
+    // throw and take the whole dashboard down; now search is simply off.
+    $panel = Panel::make()->id('without-plugin')->path('without-plugin');
+    Filament::registerPanel($panel);
+    Filament::setCurrentPanel($panel);
+
+    DB::table('pan_analytics')->insert([
+        ['name' => 'button', 'impressions' => 1, 'hovers' => 0, 'clicks' => 0],
+    ]);
+
+    Livewire::test(PanAnalyticsTableWidget::class)
+        ->assertSuccessful()
+        ->assertCanSeeTableRecords(PanAnalytics::all());
+});
+
+it('uses the Dutch translations and number format for the nl locale', function () {
+    app()->setLocale('nl');
+
+    DB::table('pan_analytics')->insert([
+        ['name' => 'knop', 'impressions' => 1234, 'hovers' => 0, 'clicks' => 0],
+    ]);
+
+    expect(PanAnalyticsTableWidget::getHeading())->toBe('Pan Analytics Tabel');
+
+    Livewire::test(PanAnalyticsTableWidget::class)
+        ->assertTableColumnFormattedStateSet('impressions', Number::format(1234, locale: 'nl'), PanAnalytics::first())
+        ->assertSee('Vertoningen');
+});
+
+it('casts the counters to integers', function () {
+    DB::table('pan_analytics')->insert([
+        ['name' => 'button', 'impressions' => 3, 'hovers' => 2, 'clicks' => 1],
+    ]);
+
+    $record = PanAnalytics::first();
+
+    expect($record->impressions)->toBe(3)
+        ->and($record->hovers)->toBe(2)
+        ->and($record->clicks)->toBe(1);
 });

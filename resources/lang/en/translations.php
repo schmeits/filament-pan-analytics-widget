@@ -2,6 +2,7 @@
 
 return [
     'heading' => 'Pan Analytics Table',
+    'not_available' => '-',
     'headers' => [
         'id' => '#',
         'name' => 'Name',
