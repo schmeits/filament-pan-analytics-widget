@@ -58,3 +58,8 @@ updates:
         update-types:
           - "minor"
           - "patch"
+    # 4.x is the Filament 3 line; Filament 4/5 lives on main (5.x).
+    ignore:
+      - dependency-name: "filament/filament"
+        update-types:
+          - "version-update:semver-major"
