@@ -2,7 +2,7 @@
 
 All notable changes to `filament-pan-analytics-widget` will be documented in this file.
 
-## 4.1.0 - unreleased
+## 4.1.0 - 2026-10-13
 
 For Filament 3. The Filament 4/5 version continues as 5.x.
 
