@@ -2,10 +2,8 @@ name: PHPStan
 
 on:
   push:
-    paths:
-      - '**.php'
-      - 'phpstan.neon.dist'
-
+    branches: [main, 4.x]
+  pull_request:
 
 permissions:
   contents: read
