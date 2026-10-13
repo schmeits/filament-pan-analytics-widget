@@ -9,6 +9,7 @@
         "single_trait_insert_per_statement": true,
         "types_spaces": {
             "space": "single"
-        }
+        },
+        "declare_strict_types": true
     }
 }

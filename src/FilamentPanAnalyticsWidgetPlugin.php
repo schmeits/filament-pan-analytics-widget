@@ -1,32 +1,73 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * src/FilamentPanAnalyticsWidgetPlugin.php
+ *
+ * Filament plugin that holds the widget settings (search, authorization) per panel.
+ */
+
 namespace Schmeits\FilamentPanAnalyticsWidget;
 
 use Closure;
 use Filament\Contracts\Plugin;
+use Filament\Facades\Filament;
 use Filament\Panel;
 use Filament\Support\Concerns\EvaluatesClosures;
+use LogicException;
 
 class FilamentPanAnalyticsWidgetPlugin implements Plugin
 {
     use EvaluatesClosures;
 
-    /**
-     * The setter promises bool|Closure|null, and the class relies on
-     * EvaluatesClosures precisely so a closure can be evaluated lazily. The
-     * property type must therefore allow the same, otherwise every closure call
-     * would throw a TypeError.
-     */
+    public const string ID = 'filament-pan-analytics-widget';
+
     protected bool | Closure | null $searchable = false;
 
-    public function getSearchable(): bool
+    protected bool | Closure $authorized = true;
+
+    public static function make(): static
     {
-        // evaluate() can return null when searchable was never set (or set to
-        // null). The cast keeps the public bool contract intact: not configured
-        // means not searchable.
-        return (bool) $this->evaluate($this->searchable);
+        return static::ensure(app(static::class));
     }
 
+    /**
+     * The plugin on the current panel. Throws when the panel does not have it;
+     * use current() when that is a normal situation.
+     */
+    public static function get(): static
+    {
+        return static::ensure(filament(static::ID));
+    }
+
+    /**
+     * The plugin on the current panel, or null when the widget is used on a
+     * panel without the plugin (or outside a panel).
+     */
+    public static function current(): ?static
+    {
+        $panel = Filament::getCurrentOrDefaultPanel();
+
+        if ($panel === null || ! $panel->hasPlugin(static::ID)) {
+            return null;
+        }
+
+        return static::ensure($panel->getPlugin(static::ID));
+    }
+
+    public function getId(): string
+    {
+        return static::ID;
+    }
+
+    public function register(Panel $panel): void {}
+
+    public function boot(Panel $panel): void {}
+
+    /**
+     * Show a search field on the name column.
+     */
     public function searchable(bool | Closure | null $searchable = true): static
     {
         $this->searchable = $searchable;
@@ -34,30 +75,32 @@ class FilamentPanAnalyticsWidgetPlugin implements Plugin
         return $this;
     }
 
-    public function getId(): string
+    public function isSearchable(): bool
     {
-        return 'filament-pan-analytics-widget';
+        return (bool) $this->evaluate($this->searchable);
     }
 
-    public function register(Panel $panel): void
+    /**
+     * Decide who may see the widget, for example
+     * ->authorize(fn (): bool => auth()->user()?->isAdmin() ?? false).
+     */
+    public function authorize(bool | Closure $authorized): static
     {
-        //
+        $this->authorized = $authorized;
+
+        return $this;
     }
 
-    public function boot(Panel $panel): void
+    public function isAuthorized(): bool
     {
-        //
+        return (bool) $this->evaluate($this->authorized);
     }
 
-    public static function make(): static
+    protected static function ensure(mixed $plugin): static
     {
-        return app(static::class);
-    }
-
-    public static function get(): static
-    {
-        /** @var static $plugin */
-        $plugin = filament(app(static::class)->getId());
+        if (! $plugin instanceof static) {
+            throw new LogicException('Expected an instance of ' . static::class . ', got ' . get_debug_type($plugin) . '.');
+        }
 
         return $plugin;
     }
