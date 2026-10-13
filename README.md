@@ -10,12 +10,20 @@ A Filament Widget for the [PanPHP plugin](https://github.com/panphp/pan) provide
 
 ## Installation
 
-> **Requires [PHP 8.3+](https://php.net/releases/), and [Laravel 11.0+](https://laravel.com)**.
+| Package version | Filament | Laravel | PHP |
+|---|---|---|---|
+| 5.x | 4.x and 5.x | 11, 12 and 13 | 8.3+ |
+| 4.x (this branch) | 3.x | 11 and 12 | 8.3+ |
+
+Version 4.x is for Filament 3, despite the number. For Filament 4 or 5, use version 5.x.
+
+This widget reads the table of [panphp/pan](https://github.com/panphp/pan), so install and migrate pan first. Numbers are formatted with the PHP intl extension when it is available.
 
 You can install the package via composer:
 
 ```bash
-composer require schmeits/filament-pan-analytics-widget
+# Filament 3
+composer require schmeits/filament-pan-analytics-widget:^4.1
 ```
 
 Optionally, you can publish the translations
