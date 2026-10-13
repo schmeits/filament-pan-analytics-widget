@@ -28,7 +28,7 @@ For Filament 4 and 5. Filament 3 stays on 4.x (branch `4.x`).
 
 Also includes every fix from 4.1.0.
 
-## 4.1.0 - unreleased
+## 4.1.0 - 2026-10-13
 
 For Filament 3. The Filament 4/5 version continues as 5.x.
 
