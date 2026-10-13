@@ -12,3 +12,7 @@ updates:
       - "dependencies"
     cooldown:
       default-days: 3
+    groups:
+      github-actions:
+        patterns:
+          - "*"
